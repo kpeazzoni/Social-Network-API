@@ -28,6 +28,7 @@ reactions: [
 {
     toJSON: {
         virturals: true,
+        getters: true,
     },
     id: false
 }
