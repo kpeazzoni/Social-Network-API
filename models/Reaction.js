@@ -20,6 +20,13 @@ const reactionSchema = new Schema(
         type: Date,
         ldefault: Date.now(),
         get:timestamp=>format_date(timestamp)
-    },
     }
+    {
+        toJSON: {
+            virturals: true,
+            getters: true,
+        },
+        id: false
+    }
+    },
 );

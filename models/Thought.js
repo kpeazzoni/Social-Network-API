@@ -5,42 +5,42 @@ const ThoughtSchema = require('./Thought');
 
 const thoughtSchema = new Schema(
     {
-thoughtText: {
-    type: String,
-    required: true,
-    minLength: 1,
-    maxLength: 280
-},
-createdAt: {
-    type: Date,
-    required: true,
-    default: Date.now(),
-    get:timestamp=>format_date(timestamp)
-},
-username: {
-    type: String,
-    required: true,
-},
-reactions: [
-    ReactionSchema
-],
-},
-{
-    toJSON: {
-        virturals: true,
-        getters: true,
+        thoughtText: {
+            type: String,
+            required: true,
+            minLength: 1,
+            maxLength: 280
+        },
+        createdAt: {
+            type: Date,
+            required: true,
+            default: Date.now(),
+            get: timestamp => format_date(timestamp)
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        reactions: [
+            ReactionSchema
+        ],
     },
-    id: false
-}
-);
+    {
+        toJSON: {
+            virturals: true,
+            getters: true,
+        },
+        id: false
+    },
+    );
 
 // Create a virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query.
 
 thoughtSchema
-.virtual('reactionCount')
-.get(function () {
-return `${this.reactions.length}`;
-});
+    .virtual('reactionCount')
+    .get(function () {
+        return `${this.reactions.length}`;
+    });
 
 // initialize our thought model
 const Thought = model('Thought', thoughtSchema);
