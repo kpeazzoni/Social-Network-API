@@ -17,12 +17,16 @@ module.exports = {
           ? res.status(404).json({ message: 'No thought' })
           : res.json(thought)
       )
+      .catch((err) => res.status(400).json(err));
   },
   // create a new thought
   createThought(req, res) {
     Thought.create(req.body)
       .then((thought) => res.json(thought))
-      .catch((err) => res.status(400).json(err))
+      .catch((err) => {
+        console.log(err);
+        return res.status(400).json(err)
+      });
   },
   // update a thought by id
   updateThought(req, res) {
@@ -48,7 +52,9 @@ module.exports = {
             { $pull: { thoughts: req.params.thoughtId } },
             { new: true },
           )
-      )
+          .then(() => res.json{message: 'thought deleted'})
+          )
+          .catch((err) => res.status(400).json(err))
   },
 
   // add reaction to thought
@@ -58,8 +64,9 @@ module.exports = {
       { $addToSet: { reactions: req.body } },
       { new: true, runValidators: true })
       .then((thought) => {
-        console.log(thought)
-        !thought ? res.status(404).json({ message: 'No thought found with this id' }) : res.json(thought)
-      }).catch((err) => res.status(400).json(err))
+        console.log(thought);
+        !thought ? res.status(404).json({ message: 'No thought found with this id' }) : res.json(thought);
+      })
+      .catch((err) => res.status(400).json(err));
   }
 };

@@ -72,5 +72,10 @@ removeFriend(req, res) {
     { _id: req.params.userId },
     { $pull: { friends: req.params.friendsId } },
     { runValidators: true, new: true }
-)},
+    )
+    .then((user) =>
+    !user ? res.status(400).json({ message: 'No user with that ID' }) : res.json(user)
+    )
+    .catch((err) => res.status(500).json(err));
+},
 };
