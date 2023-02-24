@@ -1,5 +1,7 @@
-const { Schema, Types } = require('mongoose');
-
+const { Schema, Types, model } = require('mongoose');
+const format_date = require('../utils/helper')
+const ReactionSchema = require('./Reaction');
+const ThoughtSchema = require('./Thought');
 
 const thoughtSchema = new Schema(
     {
@@ -12,16 +14,15 @@ thoughtText: {
 createdAt: {
     type: Date,
     required: true,
-    lastAccessed: { type: Date, default: Date.now },
+    default: Date.now(),
+    get:timestamp=>format_date(timestamp)
 },
 username: {
     type: String,
     required: true,
 },
-reactions: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Reaction'
-}
+reactions: [
+    ReactionSchema
 ],
 },
 {
@@ -34,11 +35,13 @@ reactions: [{
 
 // Create a virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query.
 
-thoughtSchema.virtural('reactionCount')
-.get(function(){
-    return `${this.reactions.length}`;
+thoughtSchema
+.virtual('reactionCount')
+.get(function () {
+return `${this.reactions.length}`;
 });
 
-const Thought = model('Thought', thoughtSchema)
+// initialize our thought model
+const Thought = model('Thought', thoughtSchema);
 
-model.exports = Thought;
+module.exports = Thought;
