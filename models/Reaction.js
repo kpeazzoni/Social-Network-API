@@ -21,6 +21,7 @@ const reactionSchema = new Schema(
         ldefault: Date.now(),
         get:timestamp=>format_date(timestamp)
     }
+},
     {
         toJSON: {
             virturals: true,
@@ -28,5 +29,4 @@ const reactionSchema = new Schema(
         },
         id: false
     }
-    },
 );
