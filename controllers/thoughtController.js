@@ -8,6 +8,7 @@ module.exports = {
       .then((thought) => res.json(thought))
       .catch((err) => res.status(400).json(err))
   },
+
   // find a single thought by id
   getSingleThought(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
@@ -44,6 +45,7 @@ module.exports = {
   // delete a thought
   deleteThought(req, res) {
     Thought.findOneAndDelete({ _id: req.params.thoughtId })
+    .poplulate('reactions')
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought found with this id' })
@@ -52,9 +54,10 @@ module.exports = {
             { $pull: { thoughts: req.params.thoughtId } },
             { new: true },
           )
-          .then(() => res.json{message: 'thought deleted'})
+          .then(() => res.json({message: 'thought deleted'})
           )
           .catch((err) => res.status(400).json(err))
+      )
   },
 
   // add reaction to thought
