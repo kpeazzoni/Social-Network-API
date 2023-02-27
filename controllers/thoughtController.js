@@ -53,7 +53,6 @@ module.exports = {
   // delete a thought
   deleteThought(req, res) {
     Thought.findOneAndDelete({ _id: req.params.thoughtId })
-    .poplulate('reactions')
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought found with this id' })

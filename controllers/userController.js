@@ -12,6 +12,8 @@ module.exports = {
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select('-__v')
+      .populate('friends')
+      .populate('thoughts')
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })
@@ -54,16 +56,18 @@ module.exports = {
       )
     .catch((err) => res.status(500).json(err));
   },
-  // Delete a user and reactions
+
+  // delete a user
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: 'No user with that ID' })
-          : reactions.deleteMany({ _id: { $in: user.reactions } })
-      )
-      .then(() => res.json({ message: 'User and associated apps deleted!' }))
-      .catch((err) => res.status(500).json(err));
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: "No User found with this id!" });
+          return;
+        }
+        res.json(user);
+      })
+      .catch((err) => res.status(400).json(err));
   },
 
 // delete a friend
